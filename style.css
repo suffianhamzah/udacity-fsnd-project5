@@ -1,6 +1,14 @@
+html, body {
+    height:100%;
+}
+@media (min-width: 768px) {
+    .main-wrapper {
+        height:calc(100% - 56px);
+    }
+}
 
-
-
-body, html {
-    height: 100%;
+@media (max-width: 767px) {
+    .main-wrapper {
+        height:100%;
+    }
 }

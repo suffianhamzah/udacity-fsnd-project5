@@ -1,0 +1,21 @@
+{
+  "name": "project_5",
+  "authors": [
+    "Suffian Hamzah <suffianhamzah@gmail.com>"
+  ],
+  "description": "Udacity FSND Project 5 : Neighborhood Map",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "knockout": "^3.4.2"
+  }
+}
