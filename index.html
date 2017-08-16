@@ -37,9 +37,9 @@
           </span>
         </div>
         <hr>
-        <ul class="list-group" data-bind='foreach: locationList'>
-          <li class="list-group-item" data-bind="text: name"></li>
-        </ul>
+        <div class="list-group" data-bind='foreach: locationList'>
+          <button class="list-group-item list-group-item-action" data-bind="css: { active: $index() == $parent.currentLocationIndex()}, text: title, click: $parent.openInfoWindow, event: { mouseover: $parent.makeMarkerBounce, mouseout: $parent.makeMarkerNotBounce }"></button>
+        </div>
       </div>
       <div id="map" class="col-12 col-md-9"></div>
     </div>

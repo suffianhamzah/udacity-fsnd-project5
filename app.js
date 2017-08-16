@@ -1,5 +1,5 @@
 
-
+// Model
 var locations = [
 { name: 'Yellowstone National Park',
 state: 'WY',
@@ -15,26 +15,29 @@ lng: -77.826965 },
 state: 'CA',
 country: 'USA',
 lat: 37.865101,
-lng: -119.538330}]
+lng: -119.538330}];
 
 const mapItem = function mapDataModel(data) {
   this.name = data.name;
-  this.lat = data.lat;
-  this.lng = data.lng;
   this.active = ko.observable(false);
 
-}
+};
 
+var map, center, largeInfoWindow;
 function initMap() {
   var markers = [];
   var bounds = new google.maps.LatLngBounds();
+  //Instantiate the ViewModel in initMap, so we now have the scope of initMap!
+  var viewModel = new ViewModel();
+  ko.applyBindings(viewModel);
 
   locations.forEach(function(location) {
     bounds.extend( new google.maps.LatLng(location.lat, location.lng));
-  })
-  var center = bounds.getCenter();
+  });
+
+  center = bounds.getCenter();
   var uluru = {lat: -25.363, lng: 131.044};
-  var map = new google.maps.Map(document.getElementById('map'), {
+  map = new google.maps.Map(document.getElementById('map'), {
     zoom: 4,
     center: center
   });
@@ -42,25 +45,47 @@ function initMap() {
     position: uluru,
     map: map
   });
-
-  markers = locations.map(function(location) {
+  largeInfoWindow = new google.maps.InfoWindow();
+  largeInfoWindow.addListener('closeclick', function() {
+    largeInfoWindow.marker = null;
+    map.setZoom(4);
+    map.setCenter(center);
+    viewModel.currentLocationIndex(null);
+  });
+  viewModel.infoWindow = largeInfoWindow;
+  console.log(viewModel.infoWindow);
+  var markers = locations.map(function(location, index) {
 
     let marker = new google.maps.Marker({
       position: {lat: location.lat, lng: location.lng},
       map: map,
       title: location.name
-    })
+    });
 
     marker.addListener('click', function() {
-      populateInfoWindow(this, largeInfowindow);
-      map.setZoom(8);
-      map.setCenter(this.getPosition());
+      populateInfoWindow(this, largeInfoWindow);
+      viewModel.currentLocationIndex(index);
     });
-    return marker
-  })
-  var largeInfowindow = new google.maps.InfoWindow();
 
-  function populateInfoWindow(marker, infowindow) {
+    marker.addListener('mouseover',function() {
+      this.setAnimation(google.maps.Animation.BOUNCE);
+    });
+
+    marker.addListener('mouseout',function() {
+      this.setAnimation(null);
+    });
+    return {
+      title: location.name,
+      marker: marker
+    };
+  });
+  //Add markers to viewModel
+  viewModel.locationList(markers);
+
+
+}
+
+function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
       // Clear the infowindow content to give the streetview time to load.
@@ -70,35 +95,36 @@ function initMap() {
       infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
       // Open the infowindow on the correct marker.
       infowindow.open(map, marker);
+      map.setZoom(8);
+      map.setCenter(marker.getPosition());
       // Make sure the marker property is cleared if the infowindow is closed.
-      infowindow.addListener('closeclick', function() {
-        infowindow.marker = null;
-        map.setZoom(4);
-        map.setCenter(center);
-      });
+
     }
   }
-}
-
-var ListViewModel = function(locations) {
-  var self = this;
-
-  self.locationList = locations;
-  self.chosenLocation = ko.observable();
-
-}
   //main ViewModel, where the modal will pop up
-  var ViewModel = function(locations) {
+  var ViewModel = function() {
     var self = this;
+    self.infoWindow;
+    self.locationList = ko.observableArray([]);
+    self.currentLocationIndex = ko.observable(null);
+    self.openInfoWindow = function(location) {
+      populateInfoWindow(location.marker, self.infoWindow);
+      self.currentLocationIndex(self.locationList.indexOf(location));
+      console.log(self.currentLocationIndex());
+    };
+    self.makeMarkerBounce = function(location) {
 
-    self.locationList = locations;
-    self.setActive = function() {
-      self.createMarker
-    }
-  }
+      location.marker.setAnimation(google.maps.Animation.BOUNCE);
+    };
 
-  var viewModel = new ViewModel(locations || []);
-  ko.applyBindings(viewModel);
+    self.makeMarkerNotBounce = function(location) {
+      if (location.marker.getAnimation() !== null) {
+        location.marker.setAnimation(null);
+      }
+    };
+  };
+
+
   NPS_API = '75861333-AF8F-47CE-85F3-8FAB0209987D';
   NPS_BASE_URL = 'https://developer.nps.gov/api/v0';
   console.log(initMap)
