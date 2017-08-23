@@ -115,59 +115,75 @@ function populateInfoWindow(marker, infowindow) {
     self.locationList = ko.observableArray([]);
     self.currentLocationIndex = ko.observable(null);
 
-    // Input box to filter objects
-    self.query = ko.observable('');
-
-    // with reference from http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
-    self.filteredList = ko.computed(function() {
-      var filter = self.query().toLowerCase();
-      if (!filter) {
-        return self.locationList();
-      } else {
-        return ko.utils.arrayFilter(self.locationList(), function(item) {
-          return item.title.toLowerCase().startsWith(filter);
-        });
-      }
-    }, self);
-
-    self.openInfoWindow = function(location) {
-      populateInfoWindow(location.marker, self.infoWindow);
-      self.currentLocationIndex(self.filteredList.indexOf(location));
-      console.log(self.currentLocationIndex());
-    };
-    self.makeMarkerBounce = function(location) {
-
-      location.marker.setAnimation(google.maps.Animation.BOUNCE);
-    };
-
-    self.makeMarkerNotBounce = function(location) {
-      if (location.marker.getAnimation() !== null) {
-        location.marker.setAnimation(null);
-      }
-    };
-  };
-
-
-  NPS_API = '75861333-AF8F-47CE-85F3-8FAB0209987D';
-  NPS_BASE_URL = 'https://developer.nps.gov/api/v0';
-  console.log(initMap)
-
-  baseURL = 'https://www.eventbriteapi.com/v3/';
-  var jqxhr = function(latLng) {
-
-    $.ajax( "example.json", function() {
-      console.log( "success" );
-    })
-    .done(function() {
-      console.log( "second success" );
-    })
-    .fail(function() {
-      console.log( "error" );
-    })
-    .always(function() {
-      console.log( "complete" );
+  // Input box to filter objects
+  self.query = ko.observable('');
+  self.toggleVisibility = function(locationList) {
+    locationList.forEach(function(item) {
+      item.marker.setVisible(true);
     });
   };
+
+  // with reference from http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
+  self.filteredList = ko.computed(function() {
+    var filter = self.query().toLowerCase();
+    if (!filter) {
+      ko.utils.arrayForEach(self.locationList(), function(location) {
+        location.marker.setVisible(true);
+      });
+      return self.locationList();
+    } else {
+      ko.utils.arrayForEach(self.locationList(), function(location) {
+        location.marker.setVisible(false);
+      });
+      return ko.utils.arrayFilter(self.locationList(), function(item) {
+        if (item.title.toLowerCase().startsWith(filter)) {
+          item.marker.setVisible(true);
+          return item;
+        }
+        // return item.title.toLowerCase().startsWith(filter);
+      });
+    }
+  }, self);
+
+  self.openInfoWindow = function(location) {
+    populateInfoWindow(location.marker, self.infoWindow);
+
+    self.currentLocationIndex(self.filteredList.indexOf(location));
+    console.log(self.currentLocationIndex());
+  };
+  self.makeMarkerBounce = function(location) {
+
+    location.marker.setAnimation(google.maps.Animation.BOUNCE);
+  };
+
+  self.makeMarkerNotBounce = function(location) {
+    if (location.marker.getAnimation() !== null) {
+      location.marker.setAnimation(null);
+    }
+  };
+};
+
+
+NPS_API = '75861333-AF8F-47CE-85F3-8FAB0209987D';
+NPS_BASE_URL = 'https://developer.nps.gov/api/v0';
+
+
+baseURL = 'https://www.eventbriteapi.com/v3/';
+var jqxhr = function(latLng) {
+
+  $.ajax( "example.json", function() {
+    console.log( "success" );
+  })
+  .done(function() {
+    console.log( "second success" );
+  })
+  .fail(function() {
+    console.log( "error" );
+  })
+  .always(function() {
+    console.log( "complete" );
+  });
+};
 
 // events = request('Sunnyvale');
 var request = function(address) {
