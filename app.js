@@ -24,42 +24,49 @@ const mapItem = function mapDataModel(data) {
 };
 
 var map, center, largeInfoWindow;
-function initMap() {
+function initialize() {
+  request('Sunnyvale');
+}
+function initMap(events) {
   var markers = [];
   var bounds = new google.maps.LatLngBounds();
   //Instantiate the ViewModel in initMap, so we now have the scope of initMap!
   var viewModel = new ViewModel();
   ko.applyBindings(viewModel);
-
-  locations.forEach(function(location) {
-    bounds.extend( new google.maps.LatLng(location.lat, location.lng));
+  console.log(events[0])
+  events.forEach(function(location) {
+    bounds.extend( new google.maps.LatLng(parseFloat(location.venue.latitude), parseFloat(location.venue.longitude)));
   });
 
+  /*
+  locations.forEach(function(location) {
+    bounds.extend( new google.maps.LatLng(location.latitude, location.long));
+  });
+  */
   center = bounds.getCenter();
-  var uluru = {lat: -25.363, lng: 131.044};
   map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 4,
+    zoom: 10,
     center: center
   });
-  var marker = new google.maps.Marker({
-    position: uluru,
-    map: map
-  });
+
+  var locations = events;
   largeInfoWindow = new google.maps.InfoWindow();
   largeInfoWindow.addListener('closeclick', function() {
     largeInfoWindow.marker = null;
-    map.setZoom(4);
+    map.setZoom(10);
     map.setCenter(center);
     viewModel.currentLocationIndex(null);
   });
   viewModel.infoWindow = largeInfoWindow;
   console.log(viewModel.infoWindow);
   var markers = locations.map(function(location, index) {
-
+    console.log(parseInt(location.venue.latitude));
+    console.log(parseInt(location.venue.longitude));
+    console.log(location.name.text);
     let marker = new google.maps.Marker({
-      position: {lat: location.lat, lng: location.lng},
+      position: {lat: parseFloat(location.venue.latitude), lng: parseFloat(location.venue.longitude)},
       map: map,
-      title: location.name
+      title: location.name.text
     });
 
     marker.addListener('click', function() {
@@ -75,7 +82,7 @@ function initMap() {
       this.setAnimation(null);
     });
     return {
-      title: location.name,
+      title: location.venue.name,
       marker: marker
     };
   });
@@ -95,7 +102,7 @@ function populateInfoWindow(marker, infowindow) {
       infowindow.setContent('<div>' + marker.title + '</div><div id="pano"></div>');
       // Open the infowindow on the correct marker.
       infowindow.open(map, marker);
-      map.setZoom(8);
+      map.setZoom(15);
       map.setCenter(marker.getPosition());
       // Make sure the marker property is cleared if the infowindow is closed.
 
@@ -107,9 +114,25 @@ function populateInfoWindow(marker, infowindow) {
     self.infoWindow;
     self.locationList = ko.observableArray([]);
     self.currentLocationIndex = ko.observable(null);
+
+    // Input box to filter objects
+    self.query = ko.observable('');
+
+    // with reference from http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
+    self.filteredList = ko.computed(function() {
+      var filter = self.query().toLowerCase();
+      if (!filter) {
+        return self.locationList();
+      } else {
+        return ko.utils.arrayFilter(self.locationList(), function(item) {
+          return item.title.toLowerCase().startsWith(filter);
+        });
+      }
+    }, self);
+
     self.openInfoWindow = function(location) {
       populateInfoWindow(location.marker, self.infoWindow);
-      self.currentLocationIndex(self.locationList.indexOf(location));
+      self.currentLocationIndex(self.filteredList.indexOf(location));
       console.log(self.currentLocationIndex());
     };
     self.makeMarkerBounce = function(location) {
@@ -128,3 +151,47 @@ function populateInfoWindow(marker, infowindow) {
   NPS_API = '75861333-AF8F-47CE-85F3-8FAB0209987D';
   NPS_BASE_URL = 'https://developer.nps.gov/api/v0';
   console.log(initMap)
+
+  baseURL = 'https://www.eventbriteapi.com/v3/';
+  var jqxhr = function(latLng) {
+
+    $.ajax( "example.json", function() {
+      console.log( "success" );
+    })
+    .done(function() {
+      console.log( "second success" );
+    })
+    .fail(function() {
+      console.log( "error" );
+    })
+    .always(function() {
+      console.log( "complete" );
+    });
+  };
+
+// events = request('Sunnyvale');
+var request = function(address) {
+  var events;
+  $.ajax({
+    url: "https://www.eventbriteapi.com/v3/events/search/",
+    method: "GET",
+    data: { 'token' : 'JLYZPYK6UIYN3SUGQNKB',
+    'location.within': '10mi',
+    'location.address': address,
+    'expand': 'venue' },
+    dataType: "json"
+  }).done(function( data ) {
+    events = data.events;
+    initMap(events);
+  }).fail(function( jqXHR, textStatus ) {
+    alert( "Request failed: " + textStatus );
+    return null;
+  });
+}
+//TODO
+/*
+get endpoint to show data
+get data and populate list + marker
+Have option to filter by text, filter
+Figure out what to show on infowindow
+*/
