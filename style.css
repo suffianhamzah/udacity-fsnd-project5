@@ -1,6 +1,11 @@
 html, body {
     height:100%;
 }
+
+.sidebar {
+    overflow: auto;
+    height:calc(100% - 71px);
+}
 @media (min-width: 768px) {
     .main-wrapper {
         height:calc(100% - 56px);

@@ -29,7 +29,7 @@
   <!-- Main application frame -->
   <div class="container-fluid main-wrapper">
     <div class="row h-100">
-      <div id="sidebar" class="col-12 col-md-3 mt-2">
+      <div id="sidebar" class=" col-12 col-md-3 mt-2">
         <div class="input-group">
           <input type="text" class="form-control" data-bind="value: query, valueUpdate: 'afterkeydown'" placeholder="Search for..." aria-label="Search for...">
           <span class="input-group-btn">
@@ -37,8 +37,10 @@
           </span>
         </div>
         <hr>
+        <div class="sidebar">
         <div class="list-group" data-bind='foreach: filteredList'>
           <button class="list-group-item list-group-item-action" data-bind="css: { active: $index() == $parent.currentLocationIndex()}, text: title, click: $parent.openInfoWindow, event: { mouseover: $parent.makeMarkerBounce, mouseout: $parent.makeMarkerNotBounce }"></button>
+        </div>
         </div>
       </div>
       <div id="map" class="col-12 col-md-9"></div>

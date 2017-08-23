@@ -49,6 +49,7 @@ function initMap(events) {
     center: center
   });
 
+  var defaultIcon = makeMarkerIcon('0091ff');
   var locations = events;
   largeInfoWindow = new google.maps.InfoWindow();
   largeInfoWindow.addListener('closeclick', function() {
@@ -57,6 +58,7 @@ function initMap(events) {
     map.setCenter(center);
     viewModel.currentLocationIndex(null);
   });
+
   viewModel.infoWindow = largeInfoWindow;
   console.log(viewModel.infoWindow);
   var markers = locations.map(function(location, index) {
@@ -66,7 +68,8 @@ function initMap(events) {
     let marker = new google.maps.Marker({
       position: {lat: parseFloat(location.venue.latitude), lng: parseFloat(location.venue.longitude)},
       map: map,
-      title: location.name.text
+      title: location.name.text,
+      icon: defaultIcon
     });
 
     marker.addListener('click', function() {
@@ -75,11 +78,13 @@ function initMap(events) {
     });
 
     marker.addListener('mouseover',function() {
-      this.setAnimation(google.maps.Animation.BOUNCE);
+      //this.setAnimation(google.maps.Animation.BOUNCE);
+      this.setIcon(defaultIcon);
     });
 
     marker.addListener('mouseout',function() {
-      this.setAnimation(null);
+      //this.setAnimation(null);
+      this.setIcon(defaultIcon);
     });
     return {
       title: location.venue.name,
@@ -90,6 +95,19 @@ function initMap(events) {
   viewModel.locationList(markers);
 
 
+}
+      // This function takes in a COLOR, and then creates a new marker
+      // icon of that color. The icon will be 21 px wide by 34 high, have an origin
+      // of 0, 0 and be anchored at 10, 34).
+function makeMarkerIcon(markerColor) {
+  var markerImage = new google.maps.MarkerImage(
+    'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+    '|40|_|%E2%80%A2',
+    new google.maps.Size(21, 34),
+    new google.maps.Point(0, 0),
+    new google.maps.Point(10, 34),
+    new google.maps.Size(21,34));
+  return markerImage;
 }
 
 function populateInfoWindow(marker, infowindow) {
@@ -114,7 +132,8 @@ function populateInfoWindow(marker, infowindow) {
     self.infoWindow;
     self.locationList = ko.observableArray([]);
     self.currentLocationIndex = ko.observable(null);
-
+    self.highlightedIcon = makeMarkerIcon('FFFF24');
+    self.defaultIcon = makeMarkerIcon('0091ff');
   // Input box to filter objects
   self.query = ko.observable('');
   self.toggleVisibility = function(locationList) {
@@ -136,7 +155,7 @@ function populateInfoWindow(marker, infowindow) {
         location.marker.setVisible(false);
       });
       return ko.utils.arrayFilter(self.locationList(), function(item) {
-        if (item.title.toLowerCase().startsWith(filter)) {
+        if (item.title.toLowerCase().indexOf(filter) !== -1) {
           item.marker.setVisible(true);
           return item;
         }
@@ -152,11 +171,12 @@ function populateInfoWindow(marker, infowindow) {
     console.log(self.currentLocationIndex());
   };
   self.makeMarkerBounce = function(location) {
-
-    location.marker.setAnimation(google.maps.Animation.BOUNCE);
+    location.marker.setIcon(self.highlightedIcon);
+    //location.marker.setAnimation(google.maps.Animation.BOUNCE);
   };
 
   self.makeMarkerNotBounce = function(location) {
+    location.marker.setIcon(self.defaultIcon);
     if (location.marker.getAnimation() !== null) {
       location.marker.setAnimation(null);
     }
