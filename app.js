@@ -25,7 +25,8 @@ const mapItem = function mapDataModel(data) {
 
 var map, center, largeInfoWindow;
 function initialize() {
-  request('Sunnyvale');
+  yelp_request_2('food');
+  request('Sunnyvale', initMap);
 }
 function initMap(events) {
   var markers = [];
@@ -60,11 +61,8 @@ function initMap(events) {
   });
 
   viewModel.infoWindow = largeInfoWindow;
-  console.log(viewModel.infoWindow);
+
   var markers = locations.map(function(location, index) {
-    console.log(parseInt(location.venue.latitude));
-    console.log(parseInt(location.venue.longitude));
-    console.log(location.name.text);
     let marker = new google.maps.Marker({
       position: {lat: parseFloat(location.venue.latitude), lng: parseFloat(location.venue.longitude)},
       map: map,
@@ -99,18 +97,18 @@ function initMap(events) {
       // This function takes in a COLOR, and then creates a new marker
       // icon of that color. The icon will be 21 px wide by 34 high, have an origin
       // of 0, 0 and be anchored at 10, 34).
-function makeMarkerIcon(markerColor) {
-  var markerImage = new google.maps.MarkerImage(
-    'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
-    '|40|_|%E2%80%A2',
-    new google.maps.Size(21, 34),
-    new google.maps.Point(0, 0),
-    new google.maps.Point(10, 34),
-    new google.maps.Size(21,34));
-  return markerImage;
-}
+      function makeMarkerIcon(markerColor) {
+        var markerImage = new google.maps.MarkerImage(
+          'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+          '|40|_|%E2%80%A2',
+          new google.maps.Size(21, 34),
+          new google.maps.Point(0, 0),
+          new google.maps.Point(10, 34),
+          new google.maps.Size(21,34));
+        return markerImage;
+      }
 
-function populateInfoWindow(marker, infowindow) {
+      function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
     if (infowindow.marker != marker) {
       // Clear the infowindow content to give the streetview time to load.
@@ -166,8 +164,8 @@ function populateInfoWindow(marker, infowindow) {
 
   self.openInfoWindow = function(location) {
     populateInfoWindow(location.marker, self.infoWindow);
-
-    self.currentLocationIndex(self.filteredList.indexOf(location));
+    //TODO: Fix the highlighting, maybe add a property to the list
+    self.currentLocationIndex(self.locationList.indexOf(location));
     console.log(self.currentLocationIndex());
   };
   self.makeMarkerBounce = function(location) {
@@ -206,7 +204,7 @@ var jqxhr = function(latLng) {
 };
 
 // events = request('Sunnyvale');
-var request = function(address) {
+var request = function(address, callback) {
   var events;
   $.ajax({
     url: "https://www.eventbriteapi.com/v3/events/search/",
@@ -218,12 +216,65 @@ var request = function(address) {
     dataType: "json"
   }).done(function( data ) {
     events = data.events;
-    initMap(events);
+    callback(events);
   }).fail(function( jqXHR, textStatus ) {
     alert( "Request failed: " + textStatus );
     return null;
   });
 }
+
+const yelpKey = {
+  clientId: 'XkRViyzWBDNefgBRi3llMw',
+  clientSecret: 'LxCJ6jrkXIdB6PQlO9fggqh9UOL0fRvfMuwcM7qkjwC1UMH1p5xunMd2vlBJdQzG'
+};
+
+
+function randomString(length, chars) {
+  var result = '';
+  for (var i = length; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
+    return result;
+}
+
+var yelp_request_2 = function(searchTerm) {
+  var access_token = 'Bearer Gyup0cuo2-tAVdoRRYU66NCrnedTuPzbW5KjHjUSbPw_kE7ox7v6Icfy7dSmjzcrvZY6M_tV3bt8_ealRE2mH95_Aojzagm-OBV7QOTE9sJbBL5V6ZyThtL_e2eeWXYx';
+  let myHeaders = new Headers();
+  myHeaders.append("Authorization", access_token);
+
+  fetch("https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?categories=bars&limit=50&location=New York", {
+    headers: myHeaders
+  }).then((res) => {
+    return res.json();
+  }).then((json) => {
+    console.log(json);
+  });
+
+  $.ajax({
+    url: 'https://cors-anywhere.herokuapp.com/https://api.yelp.com/oauth2/token',
+    method: 'POST',
+    dataType: 'json',
+    data: {
+      client_id:'XkRViyzWBDNefgBRi3llMw',
+      client_secret:'LxCJ6jrkXIdB6PQlO9fggqh9UOL0fRvfMuwcM7qkjwC1UMH1p5xunMd2vlBJdQzG',
+      grant_type:'client_credentials'
+    },
+    success: function(data) {
+      console.log(data);
+    }
+  })
+  $.ajax({
+    url: 'https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=delis&latitude=37.786882&longitude=-122.399972',
+    //data: params,
+    headers: { 'Authorization': access_token },
+    method: 'GET',
+    dataType: 'json',
+    success: function(data) {
+      console.log(data);
+    },
+    error: function(jqxhr, text) {
+      console.log(text);
+    }
+  });
+};
 //TODO
 /*
 get endpoint to show data
