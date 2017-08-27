@@ -41,7 +41,7 @@
           <div class="list-group" data-bind="{foreach: filteredList}">
            <!-- List group template -->
             <button class="list-group-item list-group-item-action flex-column align-items-start active"
-            data-bind="css: { active: $index() == $parent.currentLocationIndex()},
+            data-bind="css: { active: business == $parent.currentLocationIndex()},
             click: $parent.openInfoWindow,
             event: { mouseover: $parent.makeMarkerBounce, mouseout: $parent.makeMarkerNotBounce }">
             <div class="d-flex w-100 justify-content-between">
@@ -83,7 +83,7 @@
 <!-- KO templates -->
 <script type="text/html" id="listingTemplate">
     <button class="list-group-item list-group-item-action flex-column align-items-start active"
-            data-bind="css: { active: $index() == $parent.currentLocationIndex()},
+            data-bind="css: { active: business.id === $parent.currentLocationIndex().id },
             click: $parent.openInfoWindow,
             event: { mouseover: $parent.makeMarkerBounce, mouseout: $parent.makeMarkerNotBounce }">
             <div class="d-flex w-100 justify-content-between">
