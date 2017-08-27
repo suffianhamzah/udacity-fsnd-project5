@@ -1,2 +1,10 @@
 bower_components/
 node_modules/
+
+# macOS
+__MACOSX/
+._.DS_Store
+.DS_Store
+
+# yelp asset
+
