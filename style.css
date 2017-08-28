@@ -2,12 +2,11 @@ html, body {
     height:100%;
 }
 
+.main-wrapper {
+    height: calc(100vh - 56px);
+}
 
 @media (min-width: 768px) {
-    .main-wrapper {
-        height:calc(100vh - 56px);
-    }
-
     .sidebar {
     overflow: auto;
     height: calc(100% - 72px);
@@ -20,9 +19,7 @@ html, body {
 }
 
 @media (max-width: 767px) {
-    .main-wrapper {
-        height: calc(100vh - 56px);
-    }
+
 
     .sidebar {
         overflow: auto;

@@ -15,12 +15,12 @@ function initialize() {
 * @description Alerts the browser when unable to load google maps API
 */
 function mapsError() {
- var errorHtml = `
- <div class="alert alert-info" role="alert">
- This is a info alert—check it out!
- </div>
- `;
- $('#map').html(errorHtml);
+  var errorHtml = `
+  <div class="alert alert-info" role="alert">
+  This is a info alert—check it out!
+  </div>
+  `;
+  $('#map').html(errorHtml);
 }
 
 /**
@@ -111,6 +111,7 @@ function populateInfoWindow(marker, infowindow, business) {
     <address class="mb-0">
     ${business.location.display_address.map(addr => `${addr}<br>`).join('')}
     Phone: ${business.display_phone}
+    <br>
     Price: ${business.price}
     </address>
     <div>
@@ -254,9 +255,6 @@ var ViewModel = function() {
   };
 };
 
-
-
-
 /**
 * @description AJAX request for getting the Yelp Access token, and then getting the location data * from Yelp API
 * @param {string} searchTerm - term to search for e.g. food, deli
@@ -274,7 +272,6 @@ var yelpRequest = function(searchTerm, locationStr, callback) {
   * @param {string} accessToken - Yelp's access token for authenticating API request
   */
   function getLocations(accessToken){
-    console.log(accessToken);
     $.ajax({
       url: 'https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search',
       data: params,
@@ -301,16 +298,8 @@ var yelpRequest = function(searchTerm, locationStr, callback) {
       grant_type:'client_credentials'
     }
   }).done(function(data) {
-    console.log(data);
     getLocations('Bearer ' + data.access_token);
   }).fail(function() {
     alert('Unable to authenticate with Yelp!');
   });
 };
-
-
-//TODO
-/*
-do one ajax request to get info on business?
-get data and populate list + marker
-*/
