@@ -2,18 +2,41 @@ html, body {
     height:100%;
 }
 
-.sidebar {
-    overflow: auto;
-    height:calc(100% - 71px);
-}
+
 @media (min-width: 768px) {
     .main-wrapper {
         height:calc(100% - 56px);
+    }
+
+    .sidebar {
+    overflow: auto;
+    height:calc(100% - 71px);
+    }
+
+    .business-img {
+        width: 165px;
+        height: : 165px;
     }
 }
 
 @media (max-width: 767px) {
     .main-wrapper {
         height:100%;
+    }
+
+    .sidebar {
+        overflow: auto;
+        height: 86px;
+    }
+
+    .business-img {
+        width: 100px;
+        height: : 100px;
+    }
+    #sidebar {
+        height: calc(30vh - 80px);
+    }
+    #map {
+        height: 70vh;
     }
 }

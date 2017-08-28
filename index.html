@@ -15,7 +15,7 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">
       <img src="/assets/map.svg" width="30" height="30" class="d-inline-block align-top" alt="">
-      GlobeTrotter
+      Sunnyvale Food
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -29,33 +29,31 @@
   <!-- Main application frame -->
   <div class="container-fluid main-wrapper">
     <div class="row h-100">
-      <div id="sidebar" class=" col-12 col-md-3 mt-2">
+      <div id="sidebar" class=" col-sm-4 col-md-4 mt-2">
         <div class="input-group">
-          <input type="text" class="form-control" data-bind="value: query, valueUpdate: 'afterkeydown'" placeholder="Search for..." aria-label="Search for...">
-          <span class="input-group-btn">
-            <button class="btn btn-secondary" type="button">Go!</button>
-          </span>
+          <input type="text" class="form-control" data-bind="value: query, valueUpdate: 'afterkeydown'" placeholder="Type to filter the list..." aria-label="Type to filter the list...">
         </div>
+
         <hr>
         <div class="sidebar">
           <div class="list-group" data-bind="{foreach: filteredList}">
            <!-- List group template -->
-            <button class="list-group-item list-group-item-action flex-column align-items-start active"
-            data-bind="css: { active: business == $parent.currentLocationIndex()},
-            click: $parent.openInfoWindow,
-            event: { mouseover: $parent.makeMarkerBounce, mouseout: $parent.makeMarkerNotBounce }">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1" data-bind="text: title"></h5>
-              </div>
-              <div class="mb-2"><img src="assets/yelp_stars/web_and_ios/regular/regular_5.png"><span data-bind="text: business.review_count" class="pl-2 align-middle">Reviews</span></div>
-              <a class="mr-auto" data-bind="attr:{href:business.url}" target="blank"><img class="float-right" src="/assets/Yelp_trademark_RGB_outline.png" height="48"></a>
-            </button>
+           <button class="list-group-item list-group-item-action flex-column align-items-start active"
+           data-bind="css: { active: business == $parent.currentLocationIndex()},
+           click: $parent.openInfoWindow,
+           event: { mouseover: $parent.makeMarkerBounce, mouseout: $parent.makeMarkerNotBounce }">
+           <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1" data-bind="text: title"></h5>
+          </div>
+          <div class="mb-2"><img data-bind="attr:{src: $parent.serveRating(business.rating)}"><span class="pl-2 align-middle"><span data-bind="text: business.review_count"></span> Reviews</span></div>
 
-        </div>
+        </button>
+
       </div>
     </div>
-    <div id="map" class="col-12 col-md-9"></div>
   </div>
+  <div id="map" class="col-sm-8 col-md-8"></div>
+</div>
 </div>
 
 <!-- About modal-->
@@ -63,17 +61,19 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">About GlobeTrotter</h5>
+        <h5 class="modal-title" id="exampleModalLabel">About Sunnyvale Food</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div>Brand Icon made by <a href="https://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+        <div id="yelp-attribution">
+          <small>Data and search powered by:</small><a href="https://yelp.com" target="blank"><img src="/assets/Yelp_trademark_RGB_outline.png" height="48"></a>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
@@ -82,16 +82,16 @@
 <!-- Footer -->
 <!-- KO templates -->
 <script type="text/html" id="listingTemplate">
-    <button class="list-group-item list-group-item-action flex-column align-items-start active"
-            data-bind="css: { active: business.id === $parent.currentLocationIndex().id },
-            click: $parent.openInfoWindow,
-            event: { mouseover: $parent.makeMarkerBounce, mouseout: $parent.makeMarkerNotBounce }">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1" data-bind="text: title"></h5>
-                <small data-bind="text: business.review_count"></small>
-              </div>
-              <a class="mr-auto" data-bind="attr:{href:business.url}" target="blank"><img class="float-right" src="/assets/Yelp_trademark_RGB_outline.png" height="48"></a>
-            </button>
+  <button class="list-group-item list-group-item-action flex-column align-items-start active"
+  data-bind="css: { active: business.id === $parent.currentLocationIndex().id },
+  click: $parent.openInfoWindow,
+  event: { mouseover: $parent.makeMarkerBounce, mouseout: $parent.makeMarkerNotBounce }">
+  <div class="d-flex w-100 justify-content-between">
+    <h5 class="mb-1" data-bind="text: title"></h5>
+    <small data-bind="text: business.review_count"></small>
+  </div>
+  <a class="mr-auto" data-bind="attr:{href:business.url}" target="blank"><img class="float-right" src="/assets/Yelp_trademark_RGB_outline.png" height="48"></a>
+</button>
 </script>
 <!-- JS Dependencies-->
 <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
