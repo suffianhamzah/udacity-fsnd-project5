@@ -107,7 +107,7 @@ function populateInfoWindow(marker, infowindow, business) {
     <h5 class="mt-0">${title}</h5>
     <div class="hide mb-2"><img src="${serveRating(business.rating)}"><span class="pl-2 align-middle">${business.review_count} reviews</span></div>
     <address class="mb-0">
-    ${business.location.display_address.map(function(addr) {return `${addr}<br>`};).join('')}
+    ${business.location.display_address.map(function(addr) {return `${addr}<br>`;}).join('')}
     Phone: ${business.display_phone}
     <br>
     Price: ${business.price}
