@@ -5,23 +5,23 @@ html, body {
 
 @media (min-width: 768px) {
     .main-wrapper {
-        height:calc(100% - 56px);
+        height:calc(100vh - 56px);
     }
 
     .sidebar {
     overflow: auto;
-    height:calc(100% - 71px);
+    height: calc(100% - 72px);
     }
 
     .business-img {
         width: 165px;
-        height: : 165px;
+        height: 165px;
     }
 }
 
 @media (max-width: 767px) {
     .main-wrapper {
-        height:100%;
+        height: calc(100vh - 56px);
     }
 
     .sidebar {
@@ -31,12 +31,20 @@ html, body {
 
     .business-img {
         width: 100px;
-        height: : 100px;
+        height: 100px;
     }
     #sidebar {
-        height: calc(30vh - 80px);
+        height: 30%;
     }
     #map {
-        height: 70vh;
+        height: calc(70% - 8px);
+    }
+
+    .hide {
+        display: none;
+    }
+
+    h5 {
+        font-size: 1.2em;
     }
 }

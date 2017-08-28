@@ -36,10 +36,10 @@ function initMap(locations) {
       location.coordinates.latitude,
       location.coordinates.longitude));
   });
-
+  console.log(document.body.clientHeight > 767 ? 14 : 3);
   center = bounds.getCenter();
   map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 14,
+    zoom: document.body.clientHeight > 767 ? 14 : 12,
     center: center
   });
     //Instantiate the ViewModel in initMap, so we now have the scope of initMap!
@@ -107,14 +107,15 @@ function populateInfoWindow(marker, infowindow, business) {
     <img class="d-flex mr-3 rounded business-img" src="${business.image_url}" alt="Generic placeholder image">
     <div class="media-body">
     <h5 class="mt-0">${title}</h5>
-    <div class="mb-2"><img src="${serveRating(business.rating)}"><span class="pl-2 align-middle">${business.review_count} reviews</span></div>
+    <div class="hide mb-2"><img src="${serveRating(business.rating)}"><span class="pl-2 align-middle">${business.review_count} reviews</span></div>
     <address class="mb-0">
     ${business.location.display_address.map(addr => `${addr}<br>`).join('')}
     Phone: ${business.display_phone}
+    Price: ${business.price}
     </address>
     <div>
-    <a class="mr-auto"href="${business.url}" target="blank"><img class="float-right" src="/assets/Yelp_trademark_RGB_outline.png" height="48"></a>
-    <p>${business.price}</p>
+    <a class="mr-auto" href="${business.url}" target="blank"><img class="float-right" src="/assets/Yelp_trademark_RGB_outline.png" height="48"></a>
+
     </div>
     </div>
     </div>
@@ -126,7 +127,7 @@ function populateInfoWindow(marker, infowindow, business) {
     infowindow.setContent(markup(marker.title, business));
     // Open the infowindow on the correct marker.
     infowindow.open(map, marker);
-    map.setZoom(15);
+    map.setZoom(document.body.clientHeight > 767 ? 15 : 12);
     map.setCenter(marker.getPosition());
     // Make sure the marker property is cleared if the infowindow is closed.
   }
@@ -146,12 +147,12 @@ var ViewModel = function() {
   self.query = ko.observable('');
 
   self.infoWindow = new google.maps.InfoWindow({
-    maxWidth: 375
+    maxWidth: document.body.clientHeight > 767 ? 375 : 250
   });
 
   self.infoWindow.addListener('closeclick', function() {
     self.infoWindow.marker = null;
-    map.setZoom(14);
+    map.setZoom(document.body.clientHeight > 767 ? 14 : 12);
     map.setCenter(self.center);
     self.currentLocationIndex(null);
   });
