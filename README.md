@@ -22,10 +22,6 @@ Then, install this project's dependencies:
 ```
   $ bower install
 ```
-If not:
-```
- $ sudo pip install -r requirements.txt  # Caution, this will install modules globally.
-```
 
 # Usage
 
