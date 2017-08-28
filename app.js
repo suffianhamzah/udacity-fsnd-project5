@@ -36,7 +36,6 @@ function initMap(locations) {
       location.coordinates.latitude,
       location.coordinates.longitude));
   });
-  console.log(document.body.clientHeight > 767 ? 14 : 3);
   center = bounds.getCenter();
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: document.body.clientHeight > 767 ? 14 : 12,
@@ -109,7 +108,7 @@ function populateInfoWindow(marker, infowindow, business) {
     <h5 class="mt-0">${title}</h5>
     <div class="hide mb-2"><img src="${serveRating(business.rating)}"><span class="pl-2 align-middle">${business.review_count} reviews</span></div>
     <address class="mb-0">
-    ${business.location.display_address.map(addr => `${addr}<br>`).join('')}
+    ${business.location.display_address.map(function(addr) {return `${addr}<br>`}).join('')}
     Phone: ${business.display_phone}
     <br>
     Price: ${business.price}
