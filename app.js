@@ -290,8 +290,8 @@ var yelpRequest = function(searchTerm, locationStr, callback) {
     dataType: 'json',
     cache: true,
     data: {
-      client_id:'XkRViyzWBDNefgBRi3llMw',
-      client_secret:'LxCJ6jrkXIdB6PQlO9fggqh9UOL0fRvfMuwcM7qkjwC1UMH1p5xunMd2vlBJdQzG',
+      client_id:'yourAppID',
+      client_secret:'yourSecretKey',
       grant_type:'client_credentials'
     }
   }).done(function(data) {
