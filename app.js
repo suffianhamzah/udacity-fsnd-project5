@@ -15,8 +15,8 @@ function initialize() {
 */
 function mapsError() {
   var errorHtml = `
-  <div class="alert alert-info" role="alert">
-  This is a info alert—check it out!
+  <div class="mt-2 alert alert-danger" role="alert">
+  Unable to load Google Maps!
   </div>
   `;
   $('#map').html(errorHtml);
@@ -105,7 +105,7 @@ function populateInfoWindow(marker, infowindow, business) {
     <img class="d-flex mr-3 rounded business-img" src="${business.image_url}" alt="Generic placeholder image">
     <div class="media-body">
     <h5 class="mt-0">${title}</h5>
-    <div class="hide mb-2"><img src="${serveRating(business.rating)}"><span class="pl-2 align-middle">${business.review_count} reviews</span></div>
+    <div class="hide mb-2"><img src="${serveRating(business.rating)}" alt="${business.rating}"><span class="pl-2 align-middle">${business.review_count} reviews</span></div>
     <address class="mb-0">
     ${business.location.display_address.map(function(addr) {return `${addr}<br>`;}).join('')}
     Phone: ${business.display_phone}
@@ -126,8 +126,8 @@ function populateInfoWindow(marker, infowindow, business) {
     infowindow.setContent(markup(marker.title, business));
     // Open the infowindow on the correct marker.
     infowindow.open(map, marker);
-    map.setZoom(document.body.clientHeight > 767 ? 15 : 12);
-    map.setCenter(marker.getPosition());
+    map.setZoom(document.body.clientHeight > 767 ? 14 : 12);
+    map.panTo(marker.getPosition());
     // Make sure the marker property is cleared if the infowindow is closed.
   }
 }
@@ -152,7 +152,7 @@ var ViewModel = function() {
   self.infoWindow.addListener('closeclick', function() {
     self.infoWindow.marker = null;
     map.setZoom(document.body.clientHeight > 767 ? 14 : 12);
-    map.setCenter(self.center);
+    map.panTo(self.center);
     self.currentLocationIndex(null);
   });
   /**
@@ -171,6 +171,11 @@ var ViewModel = function() {
       marker.addListener('click', function() {
         populateInfoWindow(this, self.infoWindow, location);
         //this.setIcon(self.highlightedIcon);
+        this.setAnimation(google.maps.Animation.BOUNCE);
+        var mark = this;
+        setTimeout(function() {
+          mark.setAnimation(null);
+        }, 700);
         self.currentLocationIndex(location);
       });
 

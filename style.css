@@ -14,7 +14,7 @@ html, body {
 
     .business-img {
         width: 165px;
-        height: 165px;
+        height: auto;
     }
 }
 
@@ -28,7 +28,7 @@ html, body {
 
     .business-img {
         width: 100px;
-        height: 100px;
+        height: auto;
     }
     #sidebar {
         height: 30%;
