@@ -14,11 +14,9 @@ function initialize() {
 * @description Alerts the browser when unable to load google maps API
 */
 function mapsError() {
-  var errorHtml = `
-  <div class="mt-2 alert alert-danger" role="alert">
-  Unable to load Google Maps!
-  </div>
-  `;
+  var errorHtml = `<div class="mt-2 alert alert-danger" role="alert">
+                     Unable to load Google Maps!
+                   </div>`;
   $('#map').html(errorHtml);
 }
 
@@ -40,11 +38,11 @@ function initMap(locations) {
     zoom: document.body.clientHeight > 767 ? 14 : 12,
     center: center
   });
-    //Instantiate the ViewModel in initMap, so we now have the scope of initMap!
-    var viewModel = new ViewModel();
-    viewModel.center = center;
-    viewModel.locationList(viewModel.createMarkers(locations));
-    ko.applyBindings(viewModel);
+  // Instantiate the ViewModel in initMap, so we now have the scope of initMap!
+  var viewModel = new ViewModel();
+  viewModel.center = center;
+  viewModel.locationList(viewModel.createMarkers(locations));
+  ko.applyBindings(viewModel);
   }
 
 /**
@@ -71,7 +69,7 @@ function makeMarkerIcon(markerColor) {
 * @returns {string} filepath for the rating's image
 */
 function serveRating(rating) {
-  //Based on rating number, serve image of stars;
+  // Based on rating number, serve image of stars;
   const path = 'assets/yelp_stars/web_and_ios/regular/';
   const ratingMap = {
     0: 'regular_0',
@@ -101,24 +99,24 @@ function populateInfoWindow(marker, infowindow, business) {
   //Creates infowindow content
   function markup(title, business) {
     return `
-    <div class="media">
-    <img class="d-flex mr-3 rounded business-img" src="${business.image_url}" alt="Generic placeholder image">
-    <div class="media-body">
-    <h5 class="mt-0">${title}</h5>
-    <div class="hide mb-2"><img src="${serveRating(business.rating)}" alt="${business.rating}"><span class="pl-2 align-middle">${business.review_count} reviews</span></div>
-    <address class="mb-0">
-    ${business.location.display_address.map(function(addr) {return `${addr}<br>`;}).join('')}
-    Phone: ${business.display_phone}
-    <br>
-    Price: ${business.price}
-    </address>
-    <div>
-    <a class="mr-auto" href="${business.url}" target="blank"><img class="float-right" src="/assets/Yelp_trademark_RGB_outline.png" height="48"></a>
-
-    </div>
-    </div>
-    </div>
-    `;
+      <div class="media">
+        <img class="d-flex mr-3 rounded business-img" src="${business.image_url}" alt="Generic placeholder image">
+        <div class="media-body">
+          <h5 class="mt-0">${title}</h5>
+          <div class="hide mb-2"><img src="${serveRating(business.rating)}" alt="${business.rating}">
+            <span class="pl-2 align-middle">${business.review_count} reviews</span>
+          </div>
+          <address class="mb-0">
+            ${business.location.display_address.map(function(addr) {return `${addr}<br>`;}).join('')}
+            Phone: ${business.display_phone}
+            <br>
+            Price: ${business.price}
+          </address>
+          <div>
+            <a class="mr-auto" href="${business.url}" target="blank"><img class="float-right" src="/assets/Yelp_trademark_RGB_outline.png" height="48"></a>
+          </div>
+        </div>
+      </div>`;
   }
   if (infowindow.marker != marker) {
     infowindow.setContent('');
@@ -170,7 +168,6 @@ var ViewModel = function() {
 
       marker.addListener('click', function() {
         populateInfoWindow(this, self.infoWindow, location);
-        //this.setIcon(self.highlightedIcon);
         this.setAnimation(google.maps.Animation.BOUNCE);
         var mark = this;
         setTimeout(function() {
@@ -179,13 +176,11 @@ var ViewModel = function() {
         self.currentLocationIndex(location);
       });
 
-      marker.addListener('mouseover',function() {
-        //this.setAnimation(google.maps.Animation.BOUNCE);
+      marker.addListener('mouseover', function() {
         this.setIcon(self.highlightedIcon);
       });
 
-      marker.addListener('mouseout',function() {
-        //this.setAnimation(null);
+      marker.addListener('mouseout', function() {
         this.setIcon(self.defaultIcon);
       });
       return {
@@ -194,7 +189,6 @@ var ViewModel = function() {
         business : location
       };
     });
-    //Add markers to viewModel
   };
 
   // with reference from http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
@@ -218,7 +212,6 @@ var ViewModel = function() {
           item.marker.setVisible(true);
           return item;
         }
-        // return item.title.toLowerCase().startsWith(filter);
       });
     }
   }, self);
@@ -228,7 +221,7 @@ var ViewModel = function() {
   * @param {object} location - An location object
   */
   self.openInfoWindow = function(location) {
-    google.maps.event.trigger(location.marker,'click');
+    google.maps.event.trigger(location.marker, 'click');
     self.currentLocationIndex(location.business);
   };
 
@@ -253,7 +246,7 @@ var ViewModel = function() {
   * @description A wrapper KO function for the serveRating function
   * @param {string} rating - An location object
   */
-  self.serveRating= function(rating) {
+  self.serveRating = function(rating) {
     return serveRating(rating);
   };
 };
@@ -290,6 +283,7 @@ var yelpRequest = function(searchTerm, locationStr, callback) {
   }
 
   // Get access Token
+
   $.ajax({
     url: 'https://cors-anywhere.herokuapp.com/https://api.yelp.com/oauth2/token',
     method: 'POST',
