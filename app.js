@@ -267,36 +267,18 @@ var yelpRequest = function(searchTerm, locationStr, callback) {
   * @description AJAX GET request to Yelp to obtain data
   * @param {string} accessToken - Yelp's access token for authenticating API request
   */
-  function getLocations(accessToken){
-    $.ajax({
-      url: 'https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search',
-      data: params,
-      headers: { 'Authorization': accessToken },
-      method: 'GET',
-      dataType: 'json',
-      cache: true
-    }).done(function(data) {
-      callback(data.businesses);
-    }).fail(function() {
-      alert('Failed to load Yelp API');
-    });
-  }
-
-  // Get access Token
-
   $.ajax({
-    url: 'https://cors-anywhere.herokuapp.com/https://api.yelp.com/oauth2/token',
-    method: 'POST',
+    url: 'https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search',
+    data: params,
+    headers: { 'Authorization': 'Bearer ' + 'your YELP API'
+  },
+    method: 'GET',
     dataType: 'json',
-    cache: true,
-    data: {
-      client_id:'yourAppID',
-      client_secret:'yourSecretKey',
-      grant_type:'client_credentials'
-    }
+    cache: true
   }).done(function(data) {
-    getLocations('Bearer ' + data.access_token);
+    callback(data.businesses);
   }).fail(function() {
-    alert('Unable to authenticate with Yelp!');
+    alert('Failed to load Yelp API');
   });
+
 };
