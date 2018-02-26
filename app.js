@@ -268,8 +268,9 @@ var ViewModel = function() {
   * @param {string} rating - An location object
   */
   self.getNewYelpList = function() {
-    var food = self.foodTerm;
-    var location = self.locationTerm ? self.locationTerm : 'Sunnyvale';
+    console.log(self.foodTerm(), self.locationTerm());
+    var food = self.foodTerm() ? self.foodTerm() : 'food';
+    var location = self.locationTerm() ? self.locationTerm() : 'Sunnyvale';
     yelpRequest(food, location, self.updateMap);
   };
   self.removeMarkers = function() {
@@ -293,9 +294,11 @@ var ViewModel = function() {
     map.setCenter(self.center);
     */
     map.setCenter(bounds.getCenter());
+    map.setZoom(map.getZoom());
     map.panToBounds(bounds);
     map.fitBounds(bounds);
     console.log(map.getZoom());
+
     console.log(map.getCenter());
     // clears list markers and create new
     self.removeMarkers();

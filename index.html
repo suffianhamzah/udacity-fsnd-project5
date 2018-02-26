@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 
-  <title>Sunnyvale Food</title>
+  <title>FoodTrotter</title>
   <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">-->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="style.css">
@@ -16,7 +16,7 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">
       <img src="/assets/map.svg" width="30" height="30" class="d-inline-block align-top" alt="Navbar icon">
-      Sunnyvale Food
+      FoodTrotter
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -27,10 +27,11 @@
     </div>
   </nav>
 
-  <!-- Main application frame -->
-  <div class="container-fluid">
-    <div class="row main-wrapper">
-      <div id="sidebar" class=" col-sm-4 col-md-4 mt-2">
+  <!-- Main application frame-->
+
+  <main role="main" class="container-fluid">
+    <div class="row">
+      <div id="sidebar" class="d-flex flex-column main-height-sidebar col-sm-4 col-md-4 mt-2">
         <form class="form-inline">
           <label class="sr-only" for="inlineFormInputGroupUsername2">Item</label>
           <div class="input-group mb-2 mr-sm-2">
@@ -59,7 +60,7 @@
         <hr>
         <div class="sidebar">
           <div class="list-group" data-bind="{foreach: filteredList}">
-           <!-- List group template -->
+
            <div class="list-group-item list-group-item-action flex-column align-items-start active"
            data-bind="css: { active: business == $parent.currentLocationIndex()},
            click: $parent.openInfoWindow,
@@ -68,15 +69,15 @@
             <h5 class="mb-1" data-bind="text: title"></h5>
           </div>
           <div class="mb-2"><img data-bind="
-          attr:{src: $parent.serveRating(business.rating), alt: business.rating}"><span class="pl-2 align-middle"><span data-bind="text: business.review_count"></span> Reviews</span></div>
-        </div>
+            attr:{src: $parent.serveRating(business.rating), alt: business.rating}"><span class="pl-2 align-middle"><span data-bind="text: business.review_count"></span> Reviews</span></div>
+          </div>
 
+        </div>
       </div>
     </div>
+    <div id="map" class="main-height col-sm-8 col-md-8"></div>
   </div>
-  <div id="map" class="col-sm-8 col-md-8"></div>
-</div>
-</div>
+</main>
 
 <!-- About modal-->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -102,8 +103,13 @@
   </div>
 </div>
 
-<!-- Footer -->
-
+<!-- Footer
+<footer class="footer">
+  <div class="container">
+    <span class="text-muted">Place sticky footer content here.</span>
+  </div>
+</footer>
+-->
 <!-- JS Dependencies-->
 <!--<script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
