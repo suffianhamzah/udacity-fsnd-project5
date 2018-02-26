@@ -25,25 +25,36 @@ function mapsError() {
 * @param {Arr(object)} locations - location data
 */
 function initMap(locations) {
-  var center;
-  var bounds = new google.maps.LatLngBounds();
+  var bounds = getCenter(locations);
+  map = new google.maps.Map(document.getElementById('map'), {
+    //zoom: document.body.clientHeight > 767 ? 14 : 12
+    //center: bounds.getCenter()
+  });
 
+  map.fitBounds(bounds);
+  // Instantiate the ViewModel in initMap, so we now have the scope of initMap!
+  console.log(map.getZoom());
+  var viewModel = new ViewModel();
+  viewModel.center = bounds.getCenter();
+  viewModel.locationList(viewModel.createMarkers(locations));
+  ko.applyBindings(viewModel);
+  }
+
+/**
+* @decscription finds center from location longitude and latitudes
+* @param {Arr(object)} locations - location data
+*
+*/
+function getCenter(locations) {
+  var bounds = new google.maps.LatLngBounds();
   locations.forEach(function(location) {
     bounds.extend( new google.maps.LatLng(
       location.coordinates.latitude,
       location.coordinates.longitude));
   });
-  center = bounds.getCenter();
-  map = new google.maps.Map(document.getElementById('map'), {
-    zoom: document.body.clientHeight > 767 ? 14 : 12,
-    center: center
-  });
-  // Instantiate the ViewModel in initMap, so we now have the scope of initMap!
-  var viewModel = new ViewModel();
-  viewModel.center = center;
-  viewModel.locationList(viewModel.createMarkers(locations));
-  ko.applyBindings(viewModel);
-  }
+
+  return bounds;
+}
 
 /**
 * @description takes in a COLOR, and then creates a new marker
@@ -142,6 +153,8 @@ var ViewModel = function() {
   self.highlightedIcon = makeMarkerIcon('FFFF24');
   self.defaultIcon = makeMarkerIcon('0091ff');
   self.query = ko.observable('');
+  self.locationTerm = ko.observable('');
+  self.foodTerm = ko.observable('');
 
   self.infoWindow = new google.maps.InfoWindow({
     maxWidth: document.body.clientHeight > 767 ? 375 : 250
@@ -249,6 +262,45 @@ var ViewModel = function() {
   self.serveRating = function(rating) {
     return serveRating(rating);
   };
+
+  /**
+  * @description KO function for getting data from form and calls yelpRequest
+  * @param {string} rating - An location object
+  */
+  self.getNewYelpList = function() {
+    var food = self.foodTerm;
+    var location = self.locationTerm ? self.locationTerm : 'Sunnyvale';
+    yelpRequest(food, location, self.updateMap);
+  };
+  self.removeMarkers = function() {
+    ko.utils.arrayForEach(self.locationList(), function(location) {
+      location.marker.setMap(null);
+    });
+    self.locationList([]);
+  };
+
+  self.updateMap = function(locations) {
+    // calculate new center, get new locations
+    var bounds = getCenter(locations);
+    self.center =  bounds.getCenter();
+    console.log(bounds.getCenter());
+    /*
+      google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
+  if (this.getZoom() > 10) {
+    this.setZoom(10);
+  }
+  });
+    map.setCenter(self.center);
+    */
+    map.setCenter(bounds.getCenter());
+    map.panToBounds(bounds);
+    map.fitBounds(bounds);
+    console.log(map.getZoom());
+    console.log(map.getCenter());
+    // clears list markers and create new
+    self.removeMarkers();
+    self.locationList(self.createMarkers(locations));
+  };
 };
 
 /**
@@ -267,36 +319,17 @@ var yelpRequest = function(searchTerm, locationStr, callback) {
   * @description AJAX GET request to Yelp to obtain data
   * @param {string} accessToken - Yelp's access token for authenticating API request
   */
-  function getLocations(accessToken){
-    $.ajax({
-      url: 'https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search',
-      data: params,
-      headers: { 'Authorization': accessToken },
-      method: 'GET',
-      dataType: 'json',
-      cache: true
-    }).done(function(data) {
-      callback(data.businesses);
-    }).fail(function() {
-      alert('Failed to load Yelp API');
-    });
-  }
-
-  // Get access Token
-
   $.ajax({
-    url: 'https://cors-anywhere.herokuapp.com/https://api.yelp.com/oauth2/token',
-    method: 'POST',
+    url: 'https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search',
+    data: params,
+    headers: { 'Authorization': 'Bearer ' + 'Gyup0cuo2-tAVdoRRYU66NCrnedTuPzbW5KjHjUSbPw_kE7ox7v6Icfy7dSmjzcrvZY6M_tV3bt8_ealRE2mH95_Aojzagm-OBV7QOTE9sJbBL5V6ZyThtL_e2eeWXYx' },
+    method: 'GET',
     dataType: 'json',
-    cache: true,
-    data: {
-      client_id:'yourAppID',
-      client_secret:'yourSecretKey',
-      grant_type:'client_credentials'
-    }
+    cache: true
   }).done(function(data) {
-    getLocations('Bearer ' + data.access_token);
+    callback(data.businesses);
   }).fail(function() {
-    alert('Unable to authenticate with Yelp!');
+    alert('Failed to load Yelp API');
   });
-};
+
+}

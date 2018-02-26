@@ -31,10 +31,10 @@ html, body {
         height: auto;
     }
     #sidebar {
-        height: 30%;
+        height: 32%;
     }
     #map {
-        height: calc(70% - 8px);
+        height: calc(68% - 8px);
     }
 
     .hide {
