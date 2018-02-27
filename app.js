@@ -135,7 +135,7 @@ function populateInfoWindow(marker, infowindow, business) {
     infowindow.setContent(markup(marker.title, business));
     // Open the infowindow on the correct marker.
     infowindow.open(map, marker);
-    map.setZoom(document.body.clientHeight > 767 ? 14 : 12);
+    //map.setZoom(document.body.clientHeight > 767 ? 14 : 12);
     map.panTo(marker.getPosition());
     // Make sure the marker property is cleared if the infowindow is closed.
   }
@@ -162,7 +162,7 @@ var ViewModel = function() {
 
   self.infoWindow.addListener('closeclick', function() {
     self.infoWindow.marker = null;
-    map.setZoom(document.body.clientHeight > 767 ? 14 : 12);
+    //map.setZoom(document.body.clientHeight > 767 ? 14 : 12);
     map.panTo(self.center);
     self.currentLocationIndex(null);
   });
@@ -208,7 +208,6 @@ var ViewModel = function() {
   self.filteredList = ko.computed(function() {
     var filter = self.query().toLowerCase();
     self.infoWindow.close();
-    map.setZoom(14);
     map.setCenter(self.center);
     self.currentLocationIndex(null);
     if (!filter) {
@@ -285,16 +284,8 @@ var ViewModel = function() {
     var bounds = getCenter(locations);
     self.center =  bounds.getCenter();
     console.log(bounds.getCenter());
-    /*
-      google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
-  if (this.getZoom() > 10) {
-    this.setZoom(10);
-  }
-  });
-    map.setCenter(self.center);
-    */
+
     map.setCenter(bounds.getCenter());
-    map.setZoom(map.getZoom());
     map.panToBounds(bounds);
     map.fitBounds(bounds);
     console.log(map.getZoom());
