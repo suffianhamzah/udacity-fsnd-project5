@@ -1,0 +1,29 @@
+{
+  "name": "project_5",
+  "version": "1.0.0",
+  "description": "Project 5: Neighborhood Map ==================================== This project is about building a Single Page application that provides a list of Restaurants and Eateries with information, as well as their locations in a map. A user can filter the list of restaurants, and also get more information about the restaurant by clicking on the markers on the map. This project is created using Knockout JS, Bootstrap 4, Google Maps API and Yelp API.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suffianhamzah/udacity-fsnd-project5.git"
+  },
+  "keywords": [
+    "node",
+    "express"
+  ],
+  "author": "suffianhamzah",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/suffianhamzah/udacity-fsnd-project5/issues"
+  },
+  "homepage": "https://github.com/suffianhamzah/udacity-fsnd-project5#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "request": "^2.83.0",
+    "request-promise-native": "^1.0.5"
+  }
+}

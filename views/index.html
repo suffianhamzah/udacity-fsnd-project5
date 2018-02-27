@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+  <title>FoodTrotter</title>
+  <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+      <img src="../assets/map.svg" width="30" height="30" class="d-inline-block align-top" alt="Navbar icon">
+      FoodTrotter
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <button class="btn btn-outline-success my-2 my-sm-0 ml-auto" type="button" data-toggle="modal" data-target="#exampleModal">About</button>
+    </div>
+  </nav>
+
+  <!-- Main application frame-->
+
+  <main role="main" class="container-fluid">
+    <div class="row">
+      <div id="sidebar" class="d-flex flex-column main-height-sidebar col-sm-4 col-md-4 mt-2">
+
+        <!-- Search bar form -->
+        <form class="form-inline">
+          <div class="form-row">
+            <div class="col-md-6">
+              <div class="input-group input-group-sm mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">Find</div>
+                </div>
+                <input type="text" class="form-control form-control-sm" data-bind="value: foodTerm" placeholder="chicken, american, etc..">
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="input-group input-group-sm mb-2">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">At</div>
+                </div>
+                <input type="text" class="form-control form-control-sm"
+                data-bind="value: locationTerm" placeholder="Sunnyvale">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <button data-bind="click: getNewYelpList" class="btn btn-primary btn-sm mb-2">Submit</button>
+            </div>
+          </div>
+        </form>
+
+        <div class="input-group input-group-sm">
+          <input type="text" class="form-control" data-bind="value: query, valueUpdate: 'afterkeydown'" placeholder="Type to filter the list..." aria-label="Type to filter the list...">
+        </div>
+
+        <hr>
+        <div class="sidebar">
+          <!-- Search result block -->
+          <div class="list-group" data-bind="{foreach: filteredList}">
+            <div class="list-group-item list-group-item-action flex-column align-items-start active" data-bind="css: { active: business == $parent.currentLocationIndex()},
+            click: $parent.openInfoWindow,
+            event: { mouseover: $parent.makeMarkerBounce,
+            mouseout: $parent.makeMarkerNotBounce }">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1" data-bind="text: title"></h5>
+              </div>
+              <div class="mb-2">
+                <img data-bind="attr:{src: $parent.serveRating(business.rating), alt: business.rating}">
+                <span class="pl-2 align-middle">
+                <span data-bind="text: business.review_count"></span> Reviews</span>
+              </div>
+              <div>
+                <span><small data-bind="text: business.price"></small></span>
+                <span data-bind="foreach: categories">
+                  <small data-bind="text: title"></small>
+                  <span data-bind="if: ($index() !== $parent.categories().length - 1)">
+                    <small>, </small>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="map" class="main-height col-sm-8 col-md-8"></div>
+    </div>
+  </main>
+
+  <!-- About modal-->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">About Sunnyvale Food</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div>Brand Icon made by <a href="https://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+          <div id="yelp-attribution">
+            <small>Data and search powered by:</small><a href="https://yelp.com" target="blank"
+            alt="Yelp logo"><img src="/assets/Yelp_trademark_RGB_outline.png" height="48"></a>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Footer
+<footer class="footer">
+  <div class="container">
+    <span class="text-muted">Place sticky footer content here.</span>
+  </div>
+</footer>
+-->
+<!-- JS Dependencies-->
+<!--<script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>-->
+<script
+src="https://code.jquery.com/jquery-3.2.1.min.js"
+integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+crossorigin="anonymous"></script>
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+crossorigin="anonymous"></script>
+<script
+src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+crossorigin="anonymous"></script>
+<script src="bower_components/knockout/dist/knockout.js"></script>
+<script type="text/javascript" src="./app.js"></script>
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuMKZQk509VI_EFh_1lWnhE3v8u27ps34&v=3&callback=initialize" onerror="mapsError()">
+</script>
+</body>
+</html>

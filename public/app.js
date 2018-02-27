@@ -81,7 +81,7 @@ function makeMarkerIcon(markerColor) {
 */
 function serveRating(rating) {
   // Based on rating number, serve image of stars;
-  const path = 'assets/yelp_stars/web_and_ios/regular/';
+  const path = '../assets/yelp_stars/web_and_ios/regular/';
   const ratingMap = {
     0: 'regular_0',
     1: 'regular_1',
@@ -95,7 +95,7 @@ function serveRating(rating) {
     5: 'regular_5'
   };
 
-  return `assets/yelp_stars/web_and_ios/regular/${ratingMap[rating]}.png`;
+  return `../assets/yelp_stars/web_and_ios/regular/${ratingMap[rating]}.png`;
 }
 
 /**
