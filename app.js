@@ -267,11 +267,14 @@ var ViewModel = function() {
   * @param {string} rating - An location object
   */
   self.getNewYelpList = function() {
-    console.log(self.foodTerm(), self.locationTerm());
     var food = self.foodTerm() ? self.foodTerm() : 'food';
     var location = self.locationTerm() ? self.locationTerm() : 'Sunnyvale';
     yelpRequest(food, location, self.updateMap);
   };
+
+  /**
+  * @description Clears map of Markers before clearing its data in KO
+  */
   self.removeMarkers = function() {
     ko.utils.arrayForEach(self.locationList(), function(location) {
       location.marker.setMap(null);
