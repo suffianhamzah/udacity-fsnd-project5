@@ -199,7 +199,8 @@ var ViewModel = function() {
       return {
         title: location.name,
         marker: marker,
-        business : location
+        business: location,
+        categories: ko.observableArray(location.categories)
       };
     });
   };
@@ -263,6 +264,14 @@ var ViewModel = function() {
   };
 
   /**
+  * @description A wrapper KO function for the serveRating function
+  * @param {string} rating - An location object
+  */
+  self.serveRating = function(rating) {
+    return serveRating(rating);
+  };
+
+  /**
   * @description KO function for getting data from form and calls yelpRequest
   * @param {string} rating - An location object
   */
@@ -282,18 +291,18 @@ var ViewModel = function() {
     self.locationList([]);
   };
 
+  /**
+  * @description updates map with new locations returned by yelp query
+  * @param {Array(ojects)} locations - locations data returned by yelp
+  */
   self.updateMap = function(locations) {
     // calculate new center, get new locations
     var bounds = getCenter(locations);
     self.center =  bounds.getCenter();
-    console.log(bounds.getCenter());
-
     map.setCenter(bounds.getCenter());
     map.panToBounds(bounds);
     map.fitBounds(bounds);
     console.log(map.getZoom());
-
-    console.log(map.getCenter());
     // clears list markers and create new
     self.removeMarkers();
     self.locationList(self.createMarkers(locations));

@@ -65,49 +65,60 @@
 
         <hr>
         <div class="sidebar">
+          <!-- Search result block -->
           <div class="list-group" data-bind="{foreach: filteredList}">
-
-           <div class="list-group-item list-group-item-action flex-column align-items-start active"
-           data-bind="css: { active: business == $parent.currentLocationIndex()},
-           click: $parent.openInfoWindow,
-           event: { mouseover: $parent.makeMarkerBounce, mouseout: $parent.makeMarkerNotBounce }">
-           <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1" data-bind="text: title"></h5>
+            <div class="list-group-item list-group-item-action flex-column align-items-start active" data-bind="css: { active: business == $parent.currentLocationIndex()},
+            click: $parent.openInfoWindow,
+            event: { mouseover: $parent.makeMarkerBounce,
+            mouseout: $parent.makeMarkerNotBounce }">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1" data-bind="text: title"></h5>
+              </div>
+              <div class="mb-2">
+                <img data-bind="attr:{src: $parent.serveRating(business.rating), alt: business.rating}">
+                <span class="pl-2 align-middle">
+                <span data-bind="text: business.review_count"></span> Reviews</span>
+              </div>
+              <div>
+                <span><small data-bind="text: business.price"></small></span>
+                <span data-bind="foreach: categories">
+                  <small data-bind="text: title"></small>
+                  <span data-bind="if: ($index() !== $parent.categories().length - 1)">
+                    <small>, </small>
+                  </span>
+                </span>
+              </div>
+            </div>
           </div>
-          <div class="mb-2"><img data-bind="
-            attr:{src: $parent.serveRating(business.rating), alt: business.rating}"><span class="pl-2 align-middle"><span data-bind="text: business.review_count"></span> Reviews</span></div>
-          </div>
+        </div>
+      </div>
+      <div id="map" class="main-height col-sm-8 col-md-8"></div>
+    </div>
+  </main>
 
+  <!-- About modal-->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">About Sunnyvale Food</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div>Brand Icon made by <a href="https://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+          <div id="yelp-attribution">
+            <small>Data and search powered by:</small><a href="https://yelp.com" target="blank"
+            alt="Yelp logo"><img src="/assets/Yelp_trademark_RGB_outline.png" height="48"></a>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
-    <div id="map" class="main-height col-sm-8 col-md-8"></div>
   </div>
-</main>
-
-<!-- About modal-->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">About Sunnyvale Food</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div>Brand Icon made by <a href="https://www.flaticon.com/authors/madebyoliver" title="Madebyoliver">Madebyoliver</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
-        <div id="yelp-attribution">
-          <small>Data and search powered by:</small><a href="https://yelp.com" target="blank"
-          alt="Yelp logo"><img src="/assets/Yelp_trademark_RGB_outline.png" height="48"></a>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Footer
 <footer class="footer">
