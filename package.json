@@ -5,7 +5,6 @@
   "main": "server.js",
   "scripts": {
     "pretest": "eslint --ignore-path .gitignore .",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "repository": {
@@ -23,6 +22,7 @@
   },
   "homepage": "https://github.com/suffianhamzah/udacity-fsnd-project5#readme",
   "dependencies": {
+    "bower": "^1.8.2",
     "express": "^4.16.2",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5"
