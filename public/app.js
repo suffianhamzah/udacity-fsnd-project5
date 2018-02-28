@@ -5,7 +5,7 @@ var map;
 /**
 * @description Initializes location data from Yelp API, map and viewModel
 */
-function initialize() {
+function initialize () {
   //separate service for
   yelpRequest('food', 'Sunnyvale', initMap);
 }
@@ -13,7 +13,7 @@ function initialize() {
 /**
 * @description Alerts the browser when unable to load google maps API
 */
-function mapsError() {
+function mapsError () {
   var errorHtml = `<div class="mt-2 alert alert-danger" role="alert">
                      Unable to load Google Maps!
                    </div>`;
@@ -24,7 +24,7 @@ function mapsError() {
 * @description Initializes map on browser
 * @param {Arr(object)} locations - location data
 */
-function initMap(locations) {
+function initMap (locations) {
   var bounds = getCenter(locations);
   map = new google.maps.Map(document.getElementById('map'), {
     //zoom: document.body.clientHeight > 767 ? 14 : 12
@@ -45,10 +45,10 @@ function initMap(locations) {
 * @param {Arr(object)} locations - location data
 *
 */
-function getCenter(locations) {
+function getCenter (locations) {
   var bounds = new google.maps.LatLngBounds();
-  locations.forEach(function(location) {
-    bounds.extend( new google.maps.LatLng(
+  locations.forEach(function (location) {
+    bounds.extend(new google.maps.LatLng(
       location.coordinates.latitude,
       location.coordinates.longitude));
   });
@@ -63,14 +63,14 @@ function getCenter(locations) {
 * @param {string} markerColor - 6 hex string representing a color
 * @returns {object} markerImage
 */
-function makeMarkerIcon(markerColor) {
+function makeMarkerIcon (markerColor) {
   var markerImage = new google.maps.MarkerImage(
-    'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
+    'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|' + markerColor +
     '|40|_|%E2%80%A2',
     new google.maps.Size(21, 34),
     new google.maps.Point(0, 0),
     new google.maps.Point(10, 34),
-    new google.maps.Size(21,34));
+    new google.maps.Size(21, 34));
   return markerImage;
 }
 
@@ -79,9 +79,9 @@ function makeMarkerIcon(markerColor) {
 * @param {string} rating - A number ranging from 1 - 5, increments in 0.5
 * @returns {string} filepath for the rating's image
 */
-function serveRating(rating) {
+function serveRating (rating) {
   // Based on rating number, serve image of stars;
-  const path = '../assets/yelp_stars/web_and_ios/regular/';
+  const path = '/assets/yelp_stars/web_and_ios/regular/';
   const ratingMap = {
     0: 'regular_0',
     1: 'regular_1',
@@ -95,7 +95,7 @@ function serveRating(rating) {
     5: 'regular_5'
   };
 
-  return `../assets/yelp_stars/web_and_ios/regular/${ratingMap[rating]}.png`;
+  return `/assets/yelp_stars/web_and_ios/regular/${ratingMap[rating]}.png`;
 }
 
 /**
@@ -105,10 +105,10 @@ function serveRating(rating) {
 * @param {object} business - Object containing Yelp Business data
 * @returns {string} filepath for the rating's image
 */
-function populateInfoWindow(marker, infowindow, business) {
+function populateInfoWindow (marker, infowindow, business) {
 
   //Creates infowindow content
-  function markup(title, business) {
+  function markup (title, business) {
     return `
       <div class="media">
         <img class="d-flex mr-3 rounded business-img" src="${business.image_url}" alt="Generic placeholder image">
@@ -118,12 +118,12 @@ function populateInfoWindow(marker, infowindow, business) {
             <span class="pl-2 align-middle">${business.review_count} reviews</span>
           </div>
           <address class="mb-0">
-            ${business.location.display_address.map(function(addr) {return `${addr}<br>`;}).join('')}
+            ${business.location.display_address.map(function (addr) {return `${addr}<br>`;}).join('')}
             Phone: ${business.display_phone}
             <br>
             Price: ${business.price}
             <br>
-            ${business.categories.map(function(cate) {return `${cate.title}`;}).join(', ')}
+            ${business.categories.map(function (cate) {return `${cate.title}`;}).join(', ')}
           </address>
           <div>
             <a class="mr-auto" href="${business.url}" target="blank"><img class="float-right" src="/assets/Yelp_trademark_RGB_outline.png" height="48"></a>
@@ -147,7 +147,7 @@ function populateInfoWindow(marker, infowindow, business) {
 * @description A KO ViewModel object containing the logic for the list item, and
 * behaviors for markers and infowindow
 */
-var ViewModel = function() {
+var ViewModel = function () {
   var self = this;
   self.center;
   self.locationList = ko.observableArray([]);
@@ -162,7 +162,7 @@ var ViewModel = function() {
     maxWidth: document.body.clientHeight > 767 ? 375 : 250
   });
 
-  self.infoWindow.addListener('closeclick', function() {
+  self.infoWindow.addListener('closeclick', function () {
     self.infoWindow.marker = null;
     //map.setZoom(document.body.clientHeight > 767 ? 14 : 12);
     map.panTo(self.center);
@@ -172,8 +172,8 @@ var ViewModel = function() {
   * @description Creates Google Maps Marker objects from location data
   * @param {array(object)} locations - An array of location objects
   */
-  self.createMarkers = function(locations) {
-    return locations.map(function(location) {
+  self.createMarkers = function (locations) {
+    return locations.map(function (location) {
       var marker = new google.maps.Marker({
         position: {lat: location.coordinates.latitude, lng: location.coordinates.longitude},
         map: map,
@@ -181,21 +181,21 @@ var ViewModel = function() {
         icon: self.defaultIcon
       });
 
-      marker.addListener('click', function() {
+      marker.addListener('click', function () {
         populateInfoWindow(this, self.infoWindow, location);
         this.setAnimation(google.maps.Animation.BOUNCE);
         var mark = this;
-        setTimeout(function() {
+        setTimeout(function () {
           mark.setAnimation(null);
         }, 700);
         self.currentLocationIndex(location);
       });
 
-      marker.addListener('mouseover', function() {
+      marker.addListener('mouseover', function () {
         this.setIcon(self.highlightedIcon);
       });
 
-      marker.addListener('mouseout', function() {
+      marker.addListener('mouseout', function () {
         this.setIcon(self.defaultIcon);
       });
       return {
@@ -208,21 +208,21 @@ var ViewModel = function() {
   };
 
   // with reference from http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
-  self.filteredList = ko.computed(function() {
+  self.filteredList = ko.computed(function () {
     var filter = self.query().toLowerCase();
     self.infoWindow.close();
     map.setCenter(self.center);
     self.currentLocationIndex(null);
     if (!filter) {
-      ko.utils.arrayForEach(self.locationList(), function(location) {
+      ko.utils.arrayForEach(self.locationList(), function (location) {
         location.marker.setVisible(true);
       });
       return self.locationList();
     } else {
-      ko.utils.arrayForEach(self.locationList(), function(location) {
+      ko.utils.arrayForEach(self.locationList(), function (location) {
         location.marker.setVisible(false);
       });
-      return ko.utils.arrayFilter(self.locationList(), function(item) {
+      return ko.utils.arrayFilter(self.locationList(), function (item) {
         if (item.title.toLowerCase().indexOf(filter) !== -1) {
           item.marker.setVisible(true);
           return item;
@@ -235,7 +235,7 @@ var ViewModel = function() {
   * @description Triggers the 'click' event for a Google Maps Marker
   * @param {object} location - An location object
   */
-  self.openInfoWindow = function(location) {
+  self.openInfoWindow = function (location) {
     google.maps.event.trigger(location.marker, 'click');
     self.currentLocationIndex(location.business);
   };
@@ -244,7 +244,7 @@ var ViewModel = function() {
   * @description Triggers the 'mouseover' event for a Google Maps Marker
   * @param {object} location - An location object
   */
-  self.makeMarkerBounce = function(location) {
+  self.makeMarkerBounce = function (location) {
     google.maps.event.trigger(location.marker, 'mouseover');
   };
 
@@ -252,7 +252,7 @@ var ViewModel = function() {
   * @description Triggers the 'mouseout' event for a Google Maps Marker
   * @param {object} location - An location object
   */
-  self.makeMarkerNotBounce = function(location) {
+  self.makeMarkerNotBounce = function (location) {
     google.maps.event.trigger(location.marker, 'mouseout');
     location.marker.setIcon(self.defaultIcon);
   };
@@ -261,7 +261,7 @@ var ViewModel = function() {
   * @description A wrapper KO function for the serveRating function
   * @param {string} rating - An location object
   */
-  self.serveRating = function(rating) {
+  self.serveRating = function (rating) {
     return serveRating(rating);
   };
 
@@ -269,7 +269,7 @@ var ViewModel = function() {
   * @description A wrapper KO function for the serveRating function
   * @param {string} rating - An location object
   */
-  self.serveRating = function(rating) {
+  self.serveRating = function (rating) {
     return serveRating(rating);
   };
 
@@ -277,7 +277,7 @@ var ViewModel = function() {
   * @description KO function for getting data from form and calls yelpRequest
   * @param {string} rating - An location object
   */
-  self.getNewYelpList = function() {
+  self.getNewYelpList = function () {
     var food = self.foodTerm() ? self.foodTerm() : 'food';
     var location = self.locationTerm() ? self.locationTerm() : 'Sunnyvale';
     yelpRequest(food, location, self.updateMap);
@@ -286,8 +286,8 @@ var ViewModel = function() {
   /**
   * @description Clears map of Markers before clearing its data in KO
   */
-  self.removeMarkers = function() {
-    ko.utils.arrayForEach(self.locationList(), function(location) {
+  self.removeMarkers = function () {
+    ko.utils.arrayForEach(self.locationList(), function (location) {
       location.marker.setMap(null);
     });
     self.locationList([]);
@@ -297,10 +297,10 @@ var ViewModel = function() {
   * @description updates map with new locations returned by yelp query
   * @param {Array(ojects)} locations - locations data returned by yelp
   */
-  self.updateMap = function(locations) {
+  self.updateMap = function (locations) {
     // calculate new center, get new locations
     var bounds = getCenter(locations);
-    self.center =  bounds.getCenter();
+    self.center = bounds.getCenter();
     map.setCenter(bounds.getCenter());
     map.panToBounds(bounds);
     map.fitBounds(bounds);
@@ -317,7 +317,7 @@ var ViewModel = function() {
 * @param {string} locationStr - Place of where to search from
 * @param {function} callback - Callback function once data is successfully obtained
 */
-var yelpRequest = function(searchTerm, locationStr, callback) {
+var yelpRequest = function (searchTerm, locationStr, callback) {
   var params = {
     term: searchTerm,
     location: locationStr
@@ -328,16 +328,14 @@ var yelpRequest = function(searchTerm, locationStr, callback) {
   * @param {string} accessToken - Yelp's access token for authenticating API request
   */
   $.ajax({
-    url: 'https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search',
+    url: '/getYelpData',
     data: params,
-    headers: { 'Authorization': 'Bearer ' + 'Gyup0cuo2-tAVdoRRYU66NCrnedTuPzbW5KjHjUSbPw_kE7ox7v6Icfy7dSmjzcrvZY6M_tV3bt8_ealRE2mH95_Aojzagm-OBV7QOTE9sJbBL5V6ZyThtL_e2eeWXYx' },
     method: 'GET',
     dataType: 'json',
     cache: true
-  }).done(function(data) {
+  }).done(function (data) {
     callback(data.businesses);
-  }).fail(function() {
+  }).fail(function () {
     alert('Failed to load Yelp API');
   });
-
-}
+};

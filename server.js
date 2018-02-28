@@ -1,9 +1,10 @@
+/* eslint-env node, mocha */
 // server.js
 // where your node app starts
 
 // init project
 var express = require('express');
-var request = require('request');
+var rp = require('request-promise-native');
 var app = express();
 
 // we've started you off with Express,
@@ -11,27 +12,33 @@ var app = express();
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
+app.use('/assets', express.static(__dirname + '/assets'));
+app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
 // http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function (request, response) {
+app.get('/', function (request, response) {
   response.sendFile(__dirname + '/views/index.html');
 });
 
 // makes an ajax call
-app.get("/getYelpData", function (request, response) {
-
-  let yelpAPI = process.env.YELP_API;
-  request(
-  { method: "GET",
-    uri: "https://api.yelp.com/v3/businesses/search",
-    qs: request.params,
-    headers: { 'Authorization': 'Bearer ' + process.env.YELP_API},
-
-  }
-  );
+app.get('/getYelpData', function (request, response) {
+  let options = {
+    uri: 'https://api.yelp.com/v3/businesses/search',
+    qs: request.query,
+    headers: { 'Authorization': 'Bearer ' + process.env.YELP_API}
+  };
+  console.log(options);
+  rp(options)
+    .then(function (businesses) {
+      console.log('Successfully obtained yelp data!');
+      response.send(businesses);
+    })
+    .catch(function (err) {
+      console.log(`API call failed due to ${err}`);
+    });
 });
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
+var listener = app.listen(8000, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
