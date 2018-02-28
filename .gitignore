@@ -8,3 +8,6 @@ __MACOSX/
 
 # yelp asset
 
+
+#Secret File
+.env
