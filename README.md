@@ -1,6 +1,6 @@
 Project 5: Neighborhood Map
 ====================================
-This project is about building a Single Page application that provides a list of Restaurants and Eateries with information, as well as their locations in a map. A user can filter the list of restaurants, and also get more information about the restaurant by clicking on the markers on the map. This project is created using Knockout JS, Bootstrap 4, Google Maps API and Yelp API.
+This project is about building a Single Page application that provides a list of Restaurants and Eateries with information, as well as their locations in a map. A user can filter the list of restaurants, and also get more information about the restaurant by clicking on the markers on the map. A user can also search for different businesses and locations. This project is created using Knockout JS, Bootstrap 4, Google Maps API and Yelp API.
 
 # Installation
 First, either clone or download the project code from this repo:
@@ -25,4 +25,4 @@ Then, install this project's dependencies:
 
 # Usage
 
-To run this project, type: ```python -m SimpleHTTPServer``` and then open [localhost:8000](localhost:8000)
+To run this project, type: ```node server.js``` and then open ```localhost:<PORTNUMBER>```
